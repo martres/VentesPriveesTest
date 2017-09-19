@@ -24,9 +24,14 @@ class LoadingViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        FetchDataManager.GETWeather { (cityWeather, error) in
-            NavigationManager.showMain(currentVC: self)
-        }
+        
+        //The delay is just to show the animation :)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+            FetchDataManager.GETWeather { (cityWeather, error) in
+                NavigationManager.showMain(currentVC: self)
+            }
+        })
     }
 
     func startLoaderAnimation() {

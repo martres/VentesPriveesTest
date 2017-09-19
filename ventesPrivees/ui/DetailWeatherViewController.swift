@@ -91,7 +91,7 @@ extension DetailWeatherViewController: UICollectionViewDataSource, UICollectionV
             cell.temp.text = "\(forecast.currentTemp) °C"
             cell.time.text = forecast.timeStamps.getDateStringFromUnixTime()
             cell.weatherIcon.loadImageWith(urlString: URLManager.urlForIconWeatherWith(name: forecast.forecastDetails[0].icon))
-            cell.windSpeed.text = "\(forecast.windSpeed) meter by sec"
+            cell.windSpeed.text = "wind speed: \(forecast.windSpeed) M/S"
             cell.descriptionWeather.text = forecast.forecastDetails[0].descriptionWeather
         }
         
@@ -111,7 +111,5 @@ extension DetailWeatherViewController: UICollectionViewDataSource, UICollectionV
         }
         return CGSize(width: collectionView.frame.size.width, height: 75)
     }
-    
-    
     
 }
