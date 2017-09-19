@@ -25,6 +25,7 @@ class ListWeatherViewController: UIViewController {
 
         initCollectionView()
         
+        weatherDaysCollectionView.isHidden = listWeatherModel.days.count == 0
     }
     
     /*
