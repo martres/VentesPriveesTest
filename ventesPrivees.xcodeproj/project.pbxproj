@@ -238,6 +238,7 @@
 				TargetAttributes = {
 					656A60B81F66EF1000AB6FF2 = {
 						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = 352W586P22;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -476,6 +477,7 @@
 			baseConfigurationReference = 9C0165E8FE62B622C399B5DE /* Pods-ventesPrivees.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 352W586P22;
 				INFOPLIST_FILE = ventesPrivees/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.ventesPrivees;
@@ -489,6 +491,7 @@
 			baseConfigurationReference = F7EB72C958662AF84C18DD7B /* Pods-ventesPrivees.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 352W586P22;
 				INFOPLIST_FILE = ventesPrivees/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.ventesPrivees;
