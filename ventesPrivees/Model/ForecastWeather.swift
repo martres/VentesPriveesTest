@@ -19,6 +19,7 @@ class ForecastWeather: Object, Mappable {
     dynamic var sea_level = 0.0
     dynamic var humidity = 0.0
     dynamic var currentDate = ""
+    dynamic var timeStamps = 0.0
     dynamic var windSpeed = 0.0
     var forecastDetails = List<ForecastDetailWeather>()
         
@@ -40,8 +41,9 @@ class ForecastWeather: Object, Mappable {
         currentTemp     <- map["main.temp"]
         sea_level       <- map["main.sea_level"]
         humidity        <- map["main.humidity"]
-        windSpeed       <- map["wind.speed"]
+        windSpeed       <- map["wind.speed"]        
         currentDate     <- map["dt_txt"]
+        timeStamps      <- map["dt"]
         forecastDetails <- (map["weather"], ArrayTransform<ForecastDetailWeather>())
     }
 }

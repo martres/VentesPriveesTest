@@ -56,12 +56,12 @@ class RealmManager {
             try update(type: T.self, changes: getPropertiesUpdating(object: object))
         }
         else {
-            DispatchQueue.global(qos: .background).async {
+//            DispatchQueue.global(qos: .background).async {
                 let realm = try! Realm()
                 try! realm.write {
                     realm.add(object, update: true)
                 }
-            }
+//            }
         }
     }
     
@@ -135,5 +135,5 @@ class RealmManager {
     class func getObjectResult<T>(object : T.Type) throws -> Results<T> where T:Object{
         let realm = try Realm()
         return realm.objects(object)
-    }
+    }    
 }

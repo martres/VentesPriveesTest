@@ -17,18 +17,15 @@ class LoadingViewController: UIViewController {
         super.viewDidLoad()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.startLoaderAnimation()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.startLoaderAnimation()
-        do {
-            let test = try RealmManager.get(objectType: ForecastWeather.self)
-            print(test)
-        } catch {
-            print(error)
-        }
-        
         FetchDataManager.GETWeather { (cityWeather, error) in
-            print(cityWeather, error)
+            NavigationManager.showMain(currentVC: self)
         }
     }
 

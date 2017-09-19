@@ -8,64 +8,100 @@
 
 import UIKit
 
-/*
- *  TODO
- *  Add image Launch with animation will load data
- *  Design 
- *
- *
- */
-
 class ListWeatherViewController: UIViewController {
     
-    @IBOutlet weak var weatherTableView : UITableView!
+    @IBOutlet weak var weatherDaysCollectionView: UICollectionView!
     
-    var listWeatherModel: ListWeatherViewModel!
+    var listWeatherModel: ListWeatherViewModel = ListWeatherViewModel()
+    
+    class func makeFromStoryboard() -> UIViewController {
+        return UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ListWeatherViewController")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initTableView()
+        
+        self.title = listWeatherModel.cityWeather?.first?.name
+
+        initCollectionView()
+        
     }
     
     /*
      *  Function to send the data to the view detail
      */
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let vcDetail = segue.destination as? DetailWeatherViewController,segue.identifier == DetailWeatherViewController.segueIdentifier {
-            
-        }
-    }
 }
 
-extension ListWeatherViewController: UITableViewDelegate, UITableViewDataSource {
+extension ListWeatherViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    func initTableView() {
-        weatherTableView.delegate = self
-        weatherTableView.dataSource = self
-        weatherTableView.estimatedRowHeight = 60
-        weatherTableView.rowHeight = UITableViewAutomaticDimension
+    func initCollectionView() {
+        weatherDaysCollectionView.delegate = self
+        weatherDaysCollectionView.dataSource = self
         
-        let nib = UINib(nibName: WeatherTableViewCell.identifier, bundle: nil)
-        weatherTableView.register(nib, forCellReuseIdentifier: WeatherTableViewCell.identifier)
+        let todayNib = UINib(nibName: TodayCollectionViewCell.identifier, bundle: nil)
+        let otherDayNib = UINib(nibName: OtherDayCollectionViewCell.identifier, bundle: nil)
+        
+        weatherDaysCollectionView.register(todayNib, forCellWithReuseIdentifier: TodayCollectionViewCell.identifier)
+        weatherDaysCollectionView.register(otherDayNib, forCellWithReuseIdentifier: OtherDayCollectionViewCell.identifier)
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: DetailWeatherViewController.segueIdentifier, sender: nil)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if indexPath.row == 0 {
+            return CGSize(width: collectionView.frame.size.width, height: 150)
+        }
+        return CGSize(width: collectionView.frame.size.width / 2, height: collectionView.frame.size.width / 2 - 20)
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        NavigationManager.showDetail(currentVC: self, item: listWeatherModel.days[indexPath.row])
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return listWeatherModel.numberOfRow(inSection: section)
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return listWeatherModel.numberOfSection() 
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return listWeatherModel.numberOfSection()
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier:WeatherTableViewCell.identifier, for: indexPath) as? WeatherTableViewCell {
-            return cell
+    func makeTodayCell(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayCollectionViewCell.identifier, for: indexPath) as? TodayCollectionViewCell else {
+            return UICollectionViewCell()
         }
-        return UITableViewCell()
+        cell.cityName.text = listWeatherModel.cityWeather?.first?.name ?? ""
+        let day = listWeatherModel.days[indexPath.row]
+        cell.currentWeatherIcon.loadImageWith(urlString: URLManager.urlForIconWeatherWith(name: day.arrayForecast[0].forecastDetails[0].icon))
+        cell.currentWeatherDescription.text = day.arrayForecast[0].forecastDetails[0].descriptionWeather
+        cell.date.text = "Today"
+        
+        if let longitude = listWeatherModel.cityWeather?.first?.longitude, let latitude = listWeatherModel.cityWeather?.first?.latitude {
+            cell.location.text = "(\(longitude) , \(latitude))"
+        }
+        
+        cell.maxTemp.text = day.getMaxTemp()
+        cell.minTemp.text = day.getMinTemp()
+        
+        return cell
+    }
+    
+    func makeOtherDayCell(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OtherDayCollectionViewCell.identifier, for: indexPath) as? OtherDayCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        let day = listWeatherModel.days[indexPath.row]
+        cell.date.text = day.date.getCurrentDay()
+        cell.weatherIcon.loadImageWith(urlString: URLManager.urlForIconWeatherWith(name: day.arrayForecast[0].forecastDetails[0].icon))
+        cell.minTemp.text = day.getMinTemp()
+        cell.maxTemp.text = day.getMaxTemp()
+        cell.viewRight.isHidden = indexPath.row % 2 == 0
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if indexPath.row == 0 {
+            return makeTodayCell(collectionView, cellForItemAt: indexPath)
+        }
+        return makeOtherDayCell(collectionView, cellForItemAt: indexPath)
     }
 }

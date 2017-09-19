@@ -16,6 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        setStatusBarBackgroundColor(color: #colorLiteral(red: 0.01176470588, green: 0.662745098, blue: 0.9568627451, alpha: 1))
+        UIApplication.shared.statusBarStyle = .lightContent
         return true
     }
 
@@ -33,6 +35,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         self.saveContext()
+    }
+    
+    func setStatusBarBackgroundColor(color: UIColor) {
+        
+        guard let statusBar = UIApplication.shared.value(forKeyPath: "statusBarWindow.statusBar") as? UIView else { return }
+        
+        statusBar.backgroundColor = color
+        statusBar.tintColor = UIColor.white
     }
 
     // MARK: - Core Data stack
